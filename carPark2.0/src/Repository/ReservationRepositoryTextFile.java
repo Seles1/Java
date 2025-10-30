@@ -6,6 +6,8 @@ import java.io.*;
 import java.time.LocalDate;
 
 public class ReservationRepositoryTextFile extends FileRepository<Integer, Reservation> {
+    protected int nextAvailableId;
+
     ReservationRepositoryTextFile(String filename) throws Exception {
         super(filename);
     }
@@ -18,6 +20,7 @@ public class ReservationRepositoryTextFile extends FileRepository<Integer, Reser
                 String[] tokens = line.split(",");
                 if (tokens.length == 5) {
                     Integer id = Integer.parseInt(tokens[0]);
+                    nextAvailableId = id;
                     Integer carId = Integer.parseInt(tokens[1]);
                     String customerName = tokens[2];
                     LocalDate startDate = LocalDate.parse(tokens[3]);
@@ -25,7 +28,9 @@ public class ReservationRepositoryTextFile extends FileRepository<Integer, Reser
                     Reservation reservation = new Reservation(id, carId, customerName, startDate, endDate);
                     super.add(reservation);
                 }
+                line = bufferedReader.readLine();
             }
+            nextAvailableId++;
         } catch (Exception e) {
             throw new Exception("Error reading from file");
         }
@@ -39,5 +44,12 @@ public class ReservationRepositoryTextFile extends FileRepository<Integer, Reser
         } catch (Exception e) {
             throw new Exception("Error writing to file");
         }
+    }
+
+    @Override
+    public void add(Reservation r) throws Exception {
+        r.setId(nextAvailableId);
+        super.add(r);
+        nextAvailableId++;
     }
 }
