@@ -5,7 +5,7 @@ import Domain.Reservation;
 import java.io.*;
 import java.util.HashMap;
 
-public class RservationRepositoryBinaryFile extends FileRepository<Integer, Reservation> {
+public class ReservationRepositoryBinaryFile extends FileRepository<Integer, Reservation> {
     public ReservationRepositoryBinaryFile(String filename) throws Exception {
         super(filename);
     }
@@ -29,5 +29,4 @@ public class RservationRepositoryBinaryFile extends FileRepository<Integer, Rese
         }
     }
 
-}
 }
