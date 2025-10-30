@@ -16,7 +16,7 @@ public class Main {
         IRepository<Integer, Reservation> reservationRepository = new ReservationRepository();
         CarService carService = new CarService(carRepository, reservationRepository);
         ReservationService reservationService = new ReservationService(reservationRepository, carRepository);
-        UI ui = new UI(carService, reservationService);
+        UI ui = UI.createFromSettings();
         ui.run();
     }
 }

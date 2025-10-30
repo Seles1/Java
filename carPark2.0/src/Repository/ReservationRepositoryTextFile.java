@@ -8,7 +8,7 @@ import java.time.LocalDate;
 public class ReservationRepositoryTextFile extends FileRepository<Integer, Reservation> {
     protected int nextAvailableId = 1;
 
-    ReservationRepositoryTextFile(String filename) throws Exception {
+    public ReservationRepositoryTextFile(String filename) throws Exception {
         super(filename);
     }
 

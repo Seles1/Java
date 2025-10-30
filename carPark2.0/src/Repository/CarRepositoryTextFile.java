@@ -7,7 +7,7 @@ import java.io.*;
 public class CarRepositoryTextFile extends FileRepository<Integer, Car> {
     protected int nextAvailableId = 1;
 
-    CarRepositoryTextFile(String filename) throws Exception {
+    public CarRepositoryTextFile(String filename) throws Exception {
         super(filename);
     }
 
