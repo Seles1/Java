@@ -5,16 +5,17 @@ import Domain.Reservation;
 import Filter.AbstractFilter;
 import Repository.CarRepository;
 import Repository.FilteredRepository;
+import Repository.IRepository;
 import Repository.ReservationRepository;
 
 import java.util.ArrayList;
 import java.util.logging.Filter;
 
 public class CarService {
-    private final CarRepository carRepository;
-    private final ReservationRepository reservationRepository;
+    private final IRepository<Integer, Car> carRepository;
+    private final IRepository<Integer,Reservation> reservationRepository;
 
-    public CarService(CarRepository carRepository, ReservationRepository reservationRepository) {
+    public CarService(IRepository<Integer,Car> carRepository, IRepository<Integer,Reservation> reservationRepository) {
         this.carRepository = carRepository;
         this.reservationRepository = reservationRepository;
     }

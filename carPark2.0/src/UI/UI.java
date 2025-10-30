@@ -10,8 +10,11 @@ import Filter.ReservationFilterByStartDate;
 import Service.CarService;
 import Service.ReservationService;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Properties;
 import java.util.Scanner;
 
 public class UI {
@@ -25,8 +28,23 @@ public class UI {
         this.reservationService = reservationService;
     }
 
-    public void run() {
+    public void run() throws Exception {
         boolean running = true;
+        try {
+            InputStream is = new FileInputStream("src/settings.properties");
+            Properties properties = new Properties();
+            properties.load(is);
+            String repoType = properties.getProperty("RepositoryType");
+            if (!repoType.equals("memory")) {
+                String carRepoPath = properties.getProperty("CarPath");
+                String reservationRepoPath = properties.getProperty("ReservationPath");
+            }
+            else{
+
+            }
+        } catch (Exception e) {
+            throw new Exception("Can't open settings.properties file");
+        }
         while (running) {
             System.out.println("1. Car Operations");
             System.out.println("2. Reservation Operations");
