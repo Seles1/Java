@@ -17,16 +17,18 @@ public class CarRepositoryTextFile extends FileRepository<Integer, Car> {
             String line = bufferedReader.readLine();
             while (line != null) {
                 String[] tokens = line.split(",");
-                if (tokens.length == 5) {
-                    Integer id = Integer.parseInt(tokens[0]);
-                    nextAvailableId = id;
-                    String brand = tokens[1];
-                    String model = tokens[2];
-                    int price = Integer.parseInt(tokens[3]);
-                    String color = tokens[4];
-                    Car car = new Car(id, brand, model, price, color);
-                    super.add(car);
+                if (tokens.length != 5) {
+                    continue;
                 }
+                Integer id = Integer.parseInt(tokens[0]);
+                nextAvailableId = id;
+                String brand = tokens[1];
+                String model = tokens[2];
+                int price = Integer.parseInt(tokens[3]);
+                String color = tokens[4];
+                Car car = new Car(id, brand, model, price, color);
+                super.add(car);
+
                 line = bufferedReader.readLine();
             }
             nextAvailableId++;
@@ -38,7 +40,8 @@ public class CarRepositoryTextFile extends FileRepository<Integer, Car> {
     public void writeToFile() throws Exception {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
             for (Car c : elements.values()) {
-                bufferedWriter.write(c.toString() + '\n');
+                bufferedWriter.write(c.toString());
+                bufferedWriter.newLine();
             }
         } catch (Exception e) {
             throw new Exception("Error writing to file");

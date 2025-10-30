@@ -60,6 +60,6 @@ public class Car implements Identifiable<Integer> {
 
     @Override
     public String toString() {
-        return "Car with: id "+id+", brand: "+brand+", model: "+model+", price: "+price+", color: "+color;
+        return +id + "," + brand + "," + model + "," + price + "," + color;
     }
 }

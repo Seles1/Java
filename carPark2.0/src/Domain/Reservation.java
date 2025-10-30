@@ -59,6 +59,6 @@ public class Reservation implements Identifiable<Integer> {
 
     @Override
     public String toString() {
-        return "Reservation with id: " + id + ", car id: " + carId + ", customer name: " + customerName + ", start date: " + startDate + ", end date: " + endDate;
+        return id + "," + carId + "," + customerName + "," + startDate + "," + endDate;
     }
 }
