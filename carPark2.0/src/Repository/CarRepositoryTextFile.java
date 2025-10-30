@@ -5,7 +5,7 @@ import Domain.Car;
 import java.io.*;
 
 public class CarRepositoryTextFile extends FileRepository<Integer, Car> {
-    protected int nextAvailableId;
+    protected int nextAvailableId = 1;
 
     CarRepositoryTextFile(String filename) throws Exception {
         super(filename);
