@@ -17,8 +17,8 @@ public class CarRepository extends MemoryRepository<Integer, Car> {
             this.add(new Car(null, "Volvo", "S60", 350, "Grey"));
             this.add(new Car(null, "Audi", "A4", 400, "White"));
             this.add(new Car(null, "Tesla", "Model Y", 450, "Red"));
-        } catch (Exception e) {
-            System.err.println("Error adding initial cars: " + e.getMessage());
+        } catch (RepositoryException e) {
+            System.out.println("Error adding initial cars: " + e.getMessage());
         }
     }
 
