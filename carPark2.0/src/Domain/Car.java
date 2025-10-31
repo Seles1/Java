@@ -1,6 +1,8 @@
 package Domain;
 
-public class Car implements Identifiable<Integer> {
+import java.io.Serializable;
+
+public class Car implements Identifiable<Integer>, Serializable {
     private Integer id;
     private String brand;
     private String model;

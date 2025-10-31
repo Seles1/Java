@@ -1,8 +1,9 @@
 package Domain;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Reservation implements Identifiable<Integer> {
+public class Reservation implements Identifiable<Integer>, Serializable {
     private Integer id;
     private Integer carId;
     private String customerName;

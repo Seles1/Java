@@ -128,7 +128,7 @@ public class UI {
                         System.out.println("Invalid choice.");
                 }
             } catch (Exception e) {
-                System.out.println("Car operation failed");
+                System.out.println("Car operation failed: "+e.getMessage());
             }
         }
     }

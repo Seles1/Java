@@ -6,7 +6,7 @@ import java.io.*;
 import java.time.LocalDate;
 
 public class ReservationRepositoryTextFile extends FileRepository<Integer, Reservation> {
-    protected int nextAvailableId = 1;
+    protected int nextAvailableId;
 
     public ReservationRepositoryTextFile(String filename) throws Exception {
         super(filename);
@@ -14,6 +14,7 @@ public class ReservationRepositoryTextFile extends FileRepository<Integer, Reser
 
     @Override
     public void readFromFile() throws Exception {
+        nextAvailableId = 1;
         File file = new File(fileName);
         if (file.length() != 0 && file.exists()) {
             try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {

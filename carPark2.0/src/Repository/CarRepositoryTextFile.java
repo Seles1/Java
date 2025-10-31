@@ -5,7 +5,7 @@ import Domain.Car;
 import java.io.*;
 
 public class CarRepositoryTextFile extends FileRepository<Integer, Car> {
-    protected int nextAvailableId = 1;
+    protected int nextAvailableId;
 
     public CarRepositoryTextFile(String filename) throws Exception {
         super(filename);
@@ -13,6 +13,7 @@ public class CarRepositoryTextFile extends FileRepository<Integer, Car> {
 
     @Override
     public void readFromFile() throws Exception {
+        nextAvailableId = 1;
         File file = new File(fileName);
         if (file.length()!=0 && file.exists()) {
             try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
@@ -30,7 +31,6 @@ public class CarRepositoryTextFile extends FileRepository<Integer, Car> {
                     String color = tokens[4];
                     Car car = new Car(id, brand, model, price, color);
                     super.add(car);
-
                     line = bufferedReader.readLine();
                 }
                 nextAvailableId++;
@@ -54,6 +54,7 @@ public class CarRepositoryTextFile extends FileRepository<Integer, Car> {
     @Override
     public void add(Car c) throws Exception {
         c.setId(nextAvailableId);
+        System.out.println(c.getId());
         super.add(c);
         nextAvailableId++;
     }
