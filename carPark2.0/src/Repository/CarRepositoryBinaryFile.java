@@ -12,11 +12,14 @@ public class CarRepositoryBinaryFile extends FileRepository<Integer, Car> {
 
     @Override
     public void readFromFile() throws Exception {
-        try {
-            ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(fileName));
-            this.elements = (HashMap<Integer, Car>) objectInputStream.readObject();
-        } catch (Exception e) {
-            throw new Exception();
+        File file = new File(fileName);
+        if (file.length() != 0 && file.exists()) {
+            try {
+                ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(fileName));
+                this.elements = (HashMap<Integer, Car>) objectInputStream.readObject();
+            } catch (Exception e) {
+                throw new Exception();
+            }
         }
     }
 

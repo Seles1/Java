@@ -12,11 +12,14 @@ public class ReservationRepositoryBinaryFile extends FileRepository<Integer, Res
 
     @Override
     public void readFromFile() throws Exception {
-        try {
-            ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(fileName));
-            this.elements = (HashMap<Integer, Reservation>) objectInputStream.readObject();
-        } catch (Exception e) {
-            throw new Exception();
+        File file = new File(fileName);
+        if (file.length() != 0 && file.exists()) {
+            try {
+                ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(fileName));
+                this.elements = (HashMap<Integer, Reservation>) objectInputStream.readObject();
+            } catch (Exception e) {
+                throw new Exception();
+            }
         }
     }
 
