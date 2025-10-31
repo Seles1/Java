@@ -13,27 +13,30 @@ public class CarRepositoryTextFile extends FileRepository<Integer, Car> {
 
     @Override
     public void readFromFile() throws Exception {
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
-            String line = bufferedReader.readLine();
-            while (line != null) {
-                String[] tokens = line.split(",");
-                if (tokens.length != 5) {
-                    continue;
-                }
-                Integer id = Integer.parseInt(tokens[0]);
-                nextAvailableId = id;
-                String brand = tokens[1];
-                String model = tokens[2];
-                int price = Integer.parseInt(tokens[3]);
-                String color = tokens[4];
-                Car car = new Car(id, brand, model, price, color);
-                super.add(car);
+        File file = new File(fileName);
+        if (file.length()!=0 && file.exists()) {
+            try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
+                String line = bufferedReader.readLine();
+                while (line != null) {
+                    String[] tokens = line.split(",");
+                    if (tokens.length != 5) {
+                        continue;
+                    }
+                    Integer id = Integer.parseInt(tokens[0]);
+                    nextAvailableId = id;
+                    String brand = tokens[1];
+                    String model = tokens[2];
+                    int price = Integer.parseInt(tokens[3]);
+                    String color = tokens[4];
+                    Car car = new Car(id, brand, model, price, color);
+                    super.add(car);
 
-                line = bufferedReader.readLine();
+                    line = bufferedReader.readLine();
+                }
+                nextAvailableId++;
+            } catch (Exception e) {
+                throw new Exception("Error reading from file");
             }
-            nextAvailableId++;
-        } catch (Exception e) {
-            throw new Exception("Error reading from file");
         }
     }
 
