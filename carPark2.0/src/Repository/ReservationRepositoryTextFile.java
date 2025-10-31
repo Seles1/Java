@@ -1,6 +1,7 @@
 package Repository;
 
 import Domain.Reservation;
+import Exceptions.RepositoryException;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -13,7 +14,7 @@ public class ReservationRepositoryTextFile extends FileRepository<Integer, Reser
     }
 
     @Override
-    public void readFromFile() throws Exception {
+    public void readFromFile() throws RepositoryException {
         nextAvailableId = 1;
         File file = new File(fileName);
         if (file.length() != 0 && file.exists()) {
@@ -36,24 +37,24 @@ public class ReservationRepositoryTextFile extends FileRepository<Integer, Reser
                 }
                 nextAvailableId++;
             } catch (Exception e) {
-                throw new Exception("Error reading from file");
+                throw new RepositoryException("Error reading from file"+e.getMessage());
             }
         }
     }
 
-    public void writeToFile() throws Exception {
+    public void writeToFile() throws RepositoryException {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
             for (Reservation r : elements.values()) {
                 bufferedWriter.write(r.toString());
                 bufferedWriter.newLine();
             }
         } catch (Exception e) {
-            throw new Exception("Error writing to file");
+            throw new RepositoryException("Error writing to file: "+e.getMessage());
         }
     }
 
     @Override
-    public void add(Reservation r) throws Exception {
+    public void add(Reservation r) throws RepositoryException {
         r.setId(nextAvailableId);
         super.add(r);
         nextAvailableId++;

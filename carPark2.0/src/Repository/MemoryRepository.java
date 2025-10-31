@@ -1,6 +1,7 @@
 package Repository;
 
 import Domain.Identifiable;
+import Exceptions.RepositoryException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,32 +10,32 @@ public class MemoryRepository<ID, T extends Identifiable<ID>> implements IReposi
     protected Map<ID, T> elements = new HashMap<>();
 
     @Override
-    public void add(T entity) throws Exception {
+    public void add(T entity) throws RepositoryException {
         ID id = entity.getId();
         if (id == null) {
-            throw new Exception("ID is null");
+            throw new RepositoryException("ID is null");
         }
         if (elements.containsKey(id)) {
-            throw new Exception("Entity already exists: " + id);
+            throw new RepositoryException("Entity already exists, id: " + id);
         }
         elements.put(id, entity);
     }
 
     @Override
-    public void delete(ID id) throws Exception {
+    public void delete(ID id) throws RepositoryException {
         if (elements.remove(id) == null) {
-            throw new Exception("ID does not exist: " + id);
+            throw new RepositoryException("ID does not exist: " + id);
         }
     }
 
     @Override
-    public void modify(T entity) throws Exception {
+    public void modify(T entity) throws RepositoryException {
         ID id = entity.getId();
         if (id == null) {
-            throw new Exception("ID cannot be null");
+            throw new RepositoryException("ID cannot be null");
         }
         if (!elements.containsKey(id)) {
-            throw new Exception("ID does not exist: " + id);
+            throw new RepositoryException("ID does not exist: " + id);
         }
         elements.put(id, entity);
     }

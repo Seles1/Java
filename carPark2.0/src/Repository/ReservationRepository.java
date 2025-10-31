@@ -1,6 +1,7 @@
 package Repository;
 
 import Domain.Reservation;
+import Exceptions.RepositoryException;
 
 import java.time.LocalDate;
 
@@ -16,7 +17,7 @@ public class ReservationRepository extends MemoryRepository<Integer, Reservation
     }
 
     @Override
-    public void add(Reservation entity) throws Exception {
+    public void add(Reservation entity) throws RepositoryException {
         entity.setId(nextAvailableID++);
         super.add(entity);
     }

@@ -2,6 +2,7 @@ package Repository;
 
 import Domain.Car;
 import Domain.Reservation;
+import Exceptions.RepositoryException;
 
 import java.io.*;
 import java.util.HashMap;
@@ -14,7 +15,7 @@ public class ReservationRepositoryBinaryFile extends FileRepository<Integer, Res
     }
 
     @Override
-    public void readFromFile() throws Exception {
+    public void readFromFile() throws RepositoryException {
         nextAvailableId = 1;
         this.elements = new HashMap<>();
         File file = new File(fileName);
@@ -32,22 +33,22 @@ public class ReservationRepositoryBinaryFile extends FileRepository<Integer, Res
                     nextAvailableId = lastReservation.getId() + 1;
                 }
             } catch (Exception e) {
-                throw new Exception();
+                throw new RepositoryException("Error reading file " + e);
             }
         }
     }
 
-    public void writeToFile() throws Exception {
+    public void writeToFile() throws RepositoryException {
         try {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(fileName));
             objectOutputStream.writeObject(this.elements);
         } catch (Exception e) {
-            throw new Exception();
+            throw new RepositoryException("Error writing file: " + e.getMessage());
         }
     }
 
     @Override
-    public void add(Reservation r) throws Exception {
+    public void add(Reservation r) throws RepositoryException {
         r.setId(nextAvailableId);
         super.add(r);
         nextAvailableId++;

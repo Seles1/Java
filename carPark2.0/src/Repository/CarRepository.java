@@ -1,6 +1,7 @@
 package Repository;
 
 import Domain.Car;
+import Exceptions.RepositoryException;
 
 import java.lang.reflect.GenericArrayType;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class CarRepository extends MemoryRepository<Integer, Car> {
     }
 
     @Override
-    public void add(Car entity) throws Exception {
+    public void add(Car entity) throws RepositoryException {
         entity.setId(NextAvailableID++);
         super.add(entity);
     }

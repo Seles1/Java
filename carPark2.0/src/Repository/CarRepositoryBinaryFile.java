@@ -1,6 +1,7 @@
 package Repository;
 
 import Domain.Car;
+import Exceptions.RepositoryException;
 
 import java.io.*;
 import java.util.HashMap;
@@ -13,7 +14,7 @@ public class CarRepositoryBinaryFile extends FileRepository<Integer, Car> {
     }
 
     @Override
-    public void readFromFile() throws Exception {
+    public void readFromFile() throws RepositoryException {
         nextAvailableId = 1;
         this.elements = new HashMap<>();
         File file = new File(fileName);
@@ -31,22 +32,22 @@ public class CarRepositoryBinaryFile extends FileRepository<Integer, Car> {
                     nextAvailableId = lastCar.getId() + 1;
                 }
             } catch (Exception e) {
-                throw new Exception("Error writing/reading binary file: " + e.getMessage(), e);
+                throw new RepositoryException("Error writing/reading binary file: " + e.getMessage());
             }
         }
     }
 
-    public void writeToFile() throws Exception {
+    public void writeToFile() throws RepositoryException {
         try {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(fileName));
             objectOutputStream.writeObject(this.elements);
         } catch (Exception e) {
-            throw new Exception("Error writing/reading binary file: " + e.getMessage(), e);
+            throw new RepositoryException("Error writing/reading binary file: " + e.getMessage());
         }
     }
 
     @Override
-    public void add(Car c) throws Exception {
+    public void add(Car c) throws RepositoryException {
         c.setId(nextAvailableId);
         super.add(c);
         nextAvailableId++;

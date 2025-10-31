@@ -1,6 +1,7 @@
 package Repository;
 
 import Domain.Car;
+import Exceptions.RepositoryException;
 
 import java.io.*;
 
@@ -12,7 +13,7 @@ public class CarRepositoryTextFile extends FileRepository<Integer, Car> {
     }
 
     @Override
-    public void readFromFile() throws Exception {
+    public void readFromFile() throws RepositoryException {
         nextAvailableId = 1;
         File file = new File(fileName);
         if (file.length()!=0 && file.exists()) {
@@ -35,24 +36,24 @@ public class CarRepositoryTextFile extends FileRepository<Integer, Car> {
                 }
                 nextAvailableId++;
             } catch (Exception e) {
-                throw new Exception("Error reading from file");
+                throw new RepositoryException("Error reading from file: "+e.getMessage());
             }
         }
     }
 
-    public void writeToFile() throws Exception {
+    public void writeToFile() throws RepositoryException {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
             for (Car c : elements.values()) {
                 bufferedWriter.write(c.toString());
                 bufferedWriter.newLine();
             }
         } catch (Exception e) {
-            throw new Exception("Error writing to file");
+            throw new RepositoryException("Error writing to file: "+e.getMessage());
         }
     }
 
     @Override
-    public void add(Car c) throws Exception {
+    public void add(Car c) throws RepositoryException {
         c.setId(nextAvailableId);
         System.out.println(c.getId());
         super.add(c);
