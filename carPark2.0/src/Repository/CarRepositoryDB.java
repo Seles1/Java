@@ -39,12 +39,11 @@ public class CarRepositoryDB implements IRepository<Integer, Car> {
     public void add(Car element) throws RepositoryException {
         openConnection();
         try {
-            PreparedStatement st = conn.prepareStatement("INSERT INTO Cars VALUES (?,?,?,?,?)");
-            st.setInt(1, element.getId());
-            st.setString(2, element.getBrand());
-            st.setString(3, element.getModel());
-            st.setInt(4, element.getPrice());
-            st.setString(5, element.getColor());
+            PreparedStatement st = conn.prepareStatement("INSERT INTO Cars (brand, model, price, color) VALUES (?,?,?,?)");
+            st.setString(1, element.getBrand());
+            st.setString(2, element.getModel());
+            st.setInt(3, element.getPrice());
+            st.setString(4, element.getColor());
             st.executeUpdate();
             st.close();
         } catch (SQLException e) {

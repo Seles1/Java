@@ -41,12 +41,11 @@ public class ReservationRepositoryDB implements IRepository<Integer, Reservation
     public void add(Reservation element) throws RepositoryException {
         openConnection();
         try {
-            PreparedStatement st = conn.prepareStatement("INSERT INTO Reservations VALUES (?,?,?,?,?)");
-            st.setInt(1, element.getId());
-            st.setInt(2, element.getCarId());
-            st.setString(3, element.getCustomerName());
-            st.setString(4, element.getStartDate().toString());
-            st.setString(5, element.getEndDate().toString());
+            PreparedStatement st = conn.prepareStatement("INSERT INTO Reservations (carID,customerName,startDate,endDate) VALUES (?,?,?,?)");
+            st.setInt(1, element.getCarId());
+            st.setString(2, element.getCustomerName());
+            st.setString(3, element.getStartDate().toString());
+            st.setString(4, element.getEndDate().toString());
             st.executeUpdate();
             st.close();
         } catch (SQLException e) {
