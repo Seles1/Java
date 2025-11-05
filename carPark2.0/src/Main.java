@@ -12,10 +12,6 @@ import java.time.LocalDate;
 
 public class Main {
     public static void main(String[] args) throws Exception{
-        Repository.IRepository<Integer, Car> carRepository = new CarRepository();
-        IRepository<Integer, Reservation> reservationRepository = new ReservationRepository();
-        CarService carService = new CarService(carRepository, reservationRepository);
-        ReservationService reservationService = new ReservationService(reservationRepository, carRepository);
         UI ui = UI.createFromSettings();
         ui.run();
     }

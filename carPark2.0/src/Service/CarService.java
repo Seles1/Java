@@ -32,16 +32,21 @@ public class CarService {
     }
 
     public void updateCar(Integer oldId, String brand, String model, int price, String color) throws ServiceException {
-        Car car = carRepository.findById(oldId);
-        if (car == null) {
-            throw new ServiceException("Car with ID " + oldId + " not found.");
-        }
-        car.setBrand(brand);
-        car.setModel(model);
-        car.setPrice(price);
-        car.setColor(color);
         try {
-            carRepository.modify(car);
+            Car car = carRepository.findById(oldId);
+
+            if (car == null) {
+                throw new ServiceException("Car with ID " + oldId + " not found.");
+            }
+            car.setBrand(brand);
+            car.setModel(model);
+            car.setPrice(price);
+            car.setColor(color);
+            try {
+                carRepository.modify(car);
+            } catch (RepositoryException e) {
+                throw new ServiceException("Failed to update car: " + e.getMessage());
+            }
         } catch (RepositoryException e) {
             throw new ServiceException("Failed to update car: " + e.getMessage());
         }
@@ -52,7 +57,11 @@ public class CarService {
     }
 
     public Car findById(Integer id) {
-        return carRepository.findById(id);
+        try {
+            return carRepository.findById(id);
+        } catch (RepositoryException e) {
+            return null;
+        }
     }
 
     public void deleteCar(Integer id) throws ServiceException {

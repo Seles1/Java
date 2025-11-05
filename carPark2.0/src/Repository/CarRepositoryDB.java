@@ -1,0 +1,141 @@
+package Repository;
+
+import Domain.Car;
+import Exceptions.RepositoryException;
+import Exceptions.ServiceException;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+public class CarRepositoryDB implements IRepository<Integer, Car> {
+    private String URL;
+    private Connection conn = null;
+
+    public CarRepositoryDB(String URL) {
+        this.URL = URL;
+    }
+
+    private void openConnection() {
+        try {
+            if (conn == null || conn.isClosed())
+                conn = DriverManager.getConnection(URL);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void closeConnection() {
+        if (conn != null) {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    @Override
+    public void add(Car element) throws RepositoryException {
+        openConnection();
+        try {
+            PreparedStatement st = conn.prepareStatement("INSERT INTO Cars VALUES (?,?,?,?,?)");
+            st.setInt(1, element.getId());
+            st.setString(2, element.getBrand());
+            st.setString(3, element.getModel());
+            st.setInt(4, element.getPrice());
+            st.setString(5, element.getColor());
+            st.executeUpdate();
+            st.close();
+        } catch (SQLException e) {
+            throw new RepositoryException(e.getMessage());
+        } finally {
+            closeConnection();
+        }
+    }
+
+    @Override
+    public void delete(Integer id) throws RepositoryException {
+        openConnection();
+        try {
+            PreparedStatement st = conn.prepareStatement("DELETE FROM Cars WHERE Cars.id=?");
+            st.setInt(1, id);
+            st.executeUpdate();
+            st.close();
+        } catch (SQLException e) {
+            throw new RepositoryException(e.getMessage());
+        } finally {
+            closeConnection();
+        }
+    }
+
+    @Override
+    public void modify(Car element) throws RepositoryException {
+        openConnection();
+        try {
+            PreparedStatement st = conn.prepareStatement("UPDATE Cars SET brand=?, model=?, price=?, color=? WHERE id=?");
+            st.setString(1, element.getBrand());
+            st.setString(2, element.getModel());
+            st.setInt(3, element.getPrice());
+            st.setString(4, element.getColor());
+            st.setInt(5, element.getId());
+            st.executeUpdate();
+            st.close();
+        } catch (SQLException e) {
+            throw new RepositoryException(e.getMessage());
+        } finally {
+            closeConnection();
+        }
+    }
+
+    @Override
+    public Car findById(Integer id) throws RepositoryException {
+        openConnection();
+        try {
+            PreparedStatement st = conn.prepareStatement("SELECT * from Cars WHERE id=?");
+            st.setInt(1, id);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                int Id = rs.getInt("id");
+                String brand = rs.getString("brand");
+                String model = rs.getString("model");
+                int price = rs.getInt("price");
+                String color = rs.getString("color");
+                st.close();
+                return new Car(Id, brand, model, price, color);
+            } else {
+                st.close();
+                throw new RepositoryException("Car not found");
+            }
+        } catch (SQLException e) {
+            throw new RepositoryException(e.getMessage());
+        } finally {
+            closeConnection();
+        }
+    }
+
+
+    public Iterable<Car> getAll() {
+        openConnection();
+        try {
+            PreparedStatement st = conn.prepareStatement("SELECT * from Cars");
+            ResultSet rs = st.executeQuery();
+            ArrayList<Car> list = new ArrayList<>();
+            while (rs.next()) {
+                Integer id = rs.getInt("id");
+                String brand = rs.getString("brand");
+                String model = rs.getString("model");
+                int price = rs.getInt("price");
+                String color = rs.getString("color");
+                Car car = new Car(id, brand, model, price, color);
+                list.add(car);
+            }
+            st.close();
+            return list;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            closeConnection();
+        }
+    }
+}

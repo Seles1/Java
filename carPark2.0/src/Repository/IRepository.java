@@ -13,7 +13,7 @@ public interface IRepository<ID, T extends Identifiable<ID>> {
 
     public void modify(T elem) throws RepositoryException;
 
-    public T findById(ID id);
+    public T findById(ID id) throws RepositoryException;
 
     public Iterable<T> getAll();
 }
