@@ -8,7 +8,7 @@ import java.time.LocalDate;
 public class ReservationRepository extends MemoryRepository<Integer, Reservation> {
     private Integer nextAvailableID = 1;
 
-    public ReservationRepository() throws RepositoryException {
+    public ReservationRepository(){
         try {
             this.add(new Reservation(null, 1, "Alexandru Voda", LocalDate.of(2025, 1, 10), LocalDate.of(2025, 1, 15)));
             this.add(new Reservation(null, 2, "Stefan Cel Mare", LocalDate.of(2025, 1, 20), LocalDate.of(2025, 1, 22)));

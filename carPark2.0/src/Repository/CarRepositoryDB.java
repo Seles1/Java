@@ -42,8 +42,8 @@ public class CarRepositoryDB implements IRepository<Integer, Car> {
             PreparedStatement st = conn.prepareStatement("INSERT INTO Cars (brand, model, price, color) VALUES (?,?,?,?)");
             st.setString(1, element.getBrand());
             st.setString(2, element.getModel());
-            st.setInt(3, element.getPrice());
             st.setString(4, element.getColor());
+            st.setInt(3, element.getPrice());
             st.executeUpdate();
             st.close();
         } catch (SQLException e) {
