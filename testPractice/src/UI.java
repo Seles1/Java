@@ -13,7 +13,8 @@ public class UI {
         Boolean running = true;
         while (running) {
             System.out.println("1.add");
-            System.out.println("1.view");
+            System.out.println("2.view");
+            System.out.println("3.filterByYear");
             System.out.print("Enter your choice: ");
             String choice = scanner.nextLine();
             switch (choice) {
@@ -22,6 +23,9 @@ public class UI {
                     break;
                 case "2":
                     viewAnalysises();
+                    break;
+                case "3":
+                    filterByYear();
                     break;
             }
         }
@@ -46,5 +50,10 @@ public class UI {
 
     public void viewAnalysises(){
         System.out.println(service.toString());
+    }
+
+    public void filterByYear(){
+        String year=scanner.nextLine();
+        System.out.println(service.filterByYear(year));
     }
 }

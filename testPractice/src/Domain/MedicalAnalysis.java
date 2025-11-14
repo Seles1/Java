@@ -1,14 +1,17 @@
 package Domain;
 
 
-public class MedicalAnalysis implements Comparable<MedicalAnalysis>{
+public class MedicalAnalysis implements Comparable<MedicalAnalysis> {
     int id;
     String date = "";
     String status = "";
-    public MedicalAnalysis(int id,String date, String status) {
+
+    public MedicalAnalysis(int id, String date, String status) {
+        this.id = id;
         this.date = date;
         this.status = status;
     }
+
     public void setDate(String date) {
         this.date = date;
     }
@@ -34,12 +37,13 @@ public class MedicalAnalysis implements Comparable<MedicalAnalysis>{
     }
 
     @Override
-    public int compareTo(MedicalAnalysis other){
+    public int compareTo(MedicalAnalysis other) {
         return this.getDate().compareTo(other.getDate());
     }
+
     @Override
-    public String toString(){
-        return id+','+date+','+status;
+    public String toString() {
+        return id + "," + date + "," + status;
     }
 
 }

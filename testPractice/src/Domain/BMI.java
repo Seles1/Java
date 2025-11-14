@@ -16,6 +16,6 @@ public class BMI extends MedicalAnalysis {
     }
     @Override
     public String toString(){
-        return id+','+date+','+status+','+bmi;
+        return id+","+date+","+status+","+bmi;
     }
 }

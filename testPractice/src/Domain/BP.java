@@ -27,6 +27,6 @@ public class BP extends MedicalAnalysis {
     }
     @Override
     public String toString(){
-        return id+','+date+','+status+','+systolic+','+diastolic;
+        return id+","+date+","+status+","+systolic+","+diastolic;
     }
 }

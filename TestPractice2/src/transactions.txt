@@ -1,0 +1,5 @@
+INCOME,2024-01-10,true,3500,Salary
+EXPENSE,2024-01-12,false,120,Groceries
+EXPENSE,2024-01-15,true,60,Transport
+INCOME,2024-02-01,true,500,Bonus
+EXPENSE,2024-02-05,true,200,Entertainment
