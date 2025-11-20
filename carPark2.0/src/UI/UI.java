@@ -170,13 +170,13 @@ public class UI {
             switch (choice) {
                 case "1":
                     System.out.print("Enter Car Brand to search for: ");
-                    String make = scanner.nextLine();
-                    viewAll(carService.getFilteredCars(new CarFilterByBrand(make)));
+                    String brand = scanner.nextLine();
+                    viewAll(carService.getFilteredCars(car->car.getBrand().equals(brand)));
                     break;
                 case "2":
                     System.out.print("Enter Maximum Price: ");
                     int maxPrice = Integer.parseInt(scanner.nextLine());
-                    viewAll(carService.getFilteredCars(new CarFilterByMaximumPrice(maxPrice)));
+                    viewAll(carService.getFilteredCars(car->car.getPrice()<=maxPrice));
                     break;
                 case "0":
                     break;
@@ -304,12 +304,12 @@ public class UI {
             switch (choice) {
                 case "1":
                     System.out.print("Enter part of Customer Name: ");
-                    String namePart = scanner.nextLine();
-                    viewAll(reservationService.getFilteredReservations(new ReservationFilterByCustomerName(namePart)));
+                    String name = scanner.nextLine();
+                    viewAll(reservationService.getFilteredReservations(reservation->reservation.getCustomerName().equals(name)));
                     break;
                 case "2":
                     LocalDate startDate = readDate("Enter Minimum Start Date");
-                    viewAll(reservationService.getFilteredReservations(new ReservationFilterByStartDate(startDate)));
+                    viewAll(reservationService.getFilteredReservations(reservation->!reservation.getStartDate().isBefore(startDate)));
                     break;
                 case "0":
                     break;

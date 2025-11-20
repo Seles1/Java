@@ -5,6 +5,7 @@ import Filter.AbstractFilter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.*;
 
 public class FilteredRepository<ID, T extends Identifiable<ID>> {
     private final IRepository<ID, T> repository;
@@ -16,12 +17,10 @@ public class FilteredRepository<ID, T extends Identifiable<ID>> {
     }
 
     public Iterable<T> getAll() {
-        List<T> filteredList = new ArrayList<>();
-        for (T entity : repository.getAll()) {
-            if (filter.accept(entity)) {
-                filteredList.add(entity);
-            }
-        }
-        return filteredList;
+        List<T> filteredList = ((List<T>) repository.getAll());
+        List<T> result=filteredList.stream()
+                .filter(filter::accept)
+                .collect(Collectors.toList());
+        return result;
     }
 }
