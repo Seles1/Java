@@ -9,6 +9,7 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Optional;
 
 public class ReservationRepositoryDB implements IRepository<Integer, Reservation> {
     private String URL;
@@ -56,9 +57,23 @@ public class ReservationRepositoryDB implements IRepository<Integer, Reservation
     }
 
     @Override
-    public void delete(Integer id) throws RepositoryException {
+    public Optional<Reservation> delete(Integer id) throws RepositoryException {
         openConnection();
+        Reservation reservation=null;
         try {
+            PreparedStatement rt=conn.prepareStatement("SELECT * FROM Reservations WHERE Reservations.id=?");
+            rt.setInt(1, id);
+            ResultSet rs = rt.executeQuery();
+            if (rs.next()) {
+                reservation  = new Reservation(
+                        rs.getInt("id"),
+                        rs.getInt("carId"),
+                        rs.getString("customerName"),
+                        LocalDate.parse(rs.getString("startDate")),
+                        LocalDate.parse(rs.getString("endDate"))
+                );
+            }
+            rt.close();
             PreparedStatement st = conn.prepareStatement("DELETE FROM Reservations WHERE Reservations.id=?");
             st.setInt(1, id);
             st.executeUpdate();
@@ -67,6 +82,7 @@ public class ReservationRepositoryDB implements IRepository<Integer, Reservation
             throw new RepositoryException(e.getMessage());
         } finally {
             closeConnection();
+            return Optional.of(reservation);
         }
     }
 
@@ -90,7 +106,7 @@ public class ReservationRepositoryDB implements IRepository<Integer, Reservation
     }
 
     @Override
-    public Reservation findById(Integer id) throws RepositoryException {
+    public Optional<Reservation> findById(Integer id) throws RepositoryException {
         openConnection();
         try {
             PreparedStatement st = conn.prepareStatement("SELECT * from Reservations WHERE id=?");
@@ -103,7 +119,8 @@ public class ReservationRepositoryDB implements IRepository<Integer, Reservation
                 LocalDate startDate = LocalDate.parse(rs.getString("startDate"));
                 LocalDate endDate = LocalDate.parse(rs.getString("endDate"));
                 st.close();
-                return new Reservation(Id, carId, customerName, startDate, endDate);
+                Reservation reservation = new Reservation(Id, carId, customerName, startDate, endDate);
+                return Optional.of(reservation);
             } else {
                 st.close();
                 throw new RepositoryException("Reservation not found");
@@ -125,11 +142,11 @@ public class ReservationRepositoryDB implements IRepository<Integer, Reservation
             ArrayList<Reservation> list = new ArrayList<>();
             while (rs.next()) {
                 Integer id = rs.getInt("id");
-                Integer carId= rs.getInt("carId");
+                Integer carId = rs.getInt("carId");
                 String customerName = rs.getString("customerName");
                 LocalDate startDate = LocalDate.parse(rs.getString("startDate"));
                 LocalDate endDate = LocalDate.parse(rs.getString("endDate"));
-                Reservation reservation = new Reservation(id,carId, customerName, startDate, endDate);
+                Reservation reservation = new Reservation(id, carId, customerName, startDate, endDate);
                 list.add(reservation);
             }
             st.close();

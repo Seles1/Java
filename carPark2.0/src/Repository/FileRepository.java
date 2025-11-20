@@ -3,6 +3,8 @@ package Repository;
 import Domain.Identifiable;
 import Exceptions.RepositoryException;
 
+import java.util.Optional;
+
 public abstract class FileRepository<ID, T extends Identifiable<ID>> extends MemoryRepository<ID, T> {
     protected String fileName;
 
@@ -22,9 +24,11 @@ public abstract class FileRepository<ID, T extends Identifiable<ID>> extends Mem
     }
 
     @Override
-    public void delete(ID id) throws RepositoryException {
-        super.delete(id);
+    public Optional<T> delete(ID id) throws RepositoryException {
+        Optional<T> object;
+        object=super.delete(id);
         writeToFile();
+        return object;
     }
 
     @Override

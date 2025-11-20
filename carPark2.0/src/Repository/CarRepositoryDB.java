@@ -7,6 +7,7 @@ import Exceptions.ServiceException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Optional;
 
 public class CarRepositoryDB implements IRepository<Integer, Car> {
     private String URL;
@@ -54,9 +55,23 @@ public class CarRepositoryDB implements IRepository<Integer, Car> {
     }
 
     @Override
-    public void delete(Integer id) throws RepositoryException {
+    public Optional<Car> delete(Integer id) throws RepositoryException {
         openConnection();
+        Car car=null;
         try {
+            PreparedStatement rt=conn.prepareStatement("SELECT * FROM Cars WHERE Cars.id=?");
+            rt.setInt(1, id);
+            ResultSet rs = rt.executeQuery();
+            if (rs.next()) {
+                car = new Car(
+                        rs.getInt("id"),
+                        rs.getString("brand"),
+                        rs.getString("model"),
+                        rs.getInt("price"),
+                        rs.getString("color")
+                );
+            }
+            rt.close();
             PreparedStatement st = conn.prepareStatement("DELETE FROM Cars WHERE Cars.id=?");
             st.setInt(1, id);
             st.executeUpdate();
@@ -65,6 +80,7 @@ public class CarRepositoryDB implements IRepository<Integer, Car> {
             throw new RepositoryException(e.getMessage());
         } finally {
             closeConnection();
+            return Optional.of(car);
         }
     }
 
@@ -88,7 +104,7 @@ public class CarRepositoryDB implements IRepository<Integer, Car> {
     }
 
     @Override
-    public Car findById(Integer id) throws RepositoryException {
+    public Optional<Car> findById(Integer id) throws RepositoryException {
         openConnection();
         try {
             PreparedStatement st = conn.prepareStatement("SELECT * from Cars WHERE id=?");
@@ -101,7 +117,8 @@ public class CarRepositoryDB implements IRepository<Integer, Car> {
                 int price = rs.getInt("price");
                 String color = rs.getString("color");
                 st.close();
-                return new Car(Id, brand, model, price, color);
+                Car car=new Car(Id, brand, model, price, color);
+                return Optional.of(car);
             } else {
                 st.close();
                 throw new RepositoryException("Car not found");

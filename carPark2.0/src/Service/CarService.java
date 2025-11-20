@@ -5,17 +5,20 @@ import Domain.Reservation;
 import Exceptions.RepositoryException;
 import Exceptions.ServiceException;
 import Filter.AbstractFilter;
-import Repository.CarRepository;
-import Repository.FilteredRepository;
-import Repository.IRepository;
-import Repository.ReservationRepository;
+import Repository.*;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.logging.Filter;
 
 public class CarService {
     private final IRepository<Integer, Car> carRepository;
     private final IRepository<Integer, Reservation> reservationRepository;
+
+    public CarService() {
+        carRepository = new CarRepository();
+        reservationRepository = new ReservationRepository();
+    }
 
     public CarService(IRepository<Integer, Car> carRepository, IRepository<Integer, Reservation> reservationRepository) {
         this.carRepository = carRepository;
@@ -33,17 +36,17 @@ public class CarService {
 
     public void updateCar(Integer oldId, String brand, String model, int price, String color) throws ServiceException {
         try {
-            Car car = carRepository.findById(oldId);
+            Optional<Car> car = carRepository.findById(oldId);
 
-            if (car == null) {
+            if (car.isEmpty()) {
                 throw new ServiceException("Car with ID " + oldId + " not found.");
             }
-            car.setBrand(brand);
-            car.setModel(model);
-            car.setPrice(price);
-            car.setColor(color);
+            car.get().setBrand(brand);
+            car.get().setModel(model);
+            car.get().setPrice(price);
+            car.get().setColor(color);
             try {
-                carRepository.modify(car);
+                carRepository.modify(car.get());
             } catch (RepositoryException e) {
                 throw new ServiceException("Failed to update car: " + e.getMessage());
             }
@@ -56,7 +59,7 @@ public class CarService {
         return carRepository.getAll();
     }
 
-    public Car findById(Integer id) {
+    public Optional<Car> findById(Integer id) {
         try {
             return carRepository.findById(id);
         } catch (RepositoryException e) {

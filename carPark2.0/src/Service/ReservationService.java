@@ -5,16 +5,20 @@ import Domain.Reservation;
 import Exceptions.RepositoryException;
 import Exceptions.ServiceException;
 import Filter.AbstractFilter;
-import Repository.CarRepository;
-import Repository.FilteredRepository;
-import Repository.IRepository;
-import Repository.ReservationRepository;
+import Repository.*;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDate;
+import java.util.Optional;
 
 public class ReservationService {
     private final IRepository<Integer, Reservation> reservationRepository;
     private final IRepository<Integer, Car> carRepository;
+
+    public ReservationService() {
+        reservationRepository = new ReservationRepository();
+        carRepository = new CarRepository();
+    }
 
     public ReservationService(IRepository<Integer, Reservation> reservationRepository, IRepository<Integer, Car> carRepository) {
         this.reservationRepository = reservationRepository;
@@ -23,7 +27,7 @@ public class ReservationService {
 
     public void addReservation(Integer carId, String customerName, LocalDate startDate, LocalDate endDate) throws ServiceException {
         try {
-            Car car = carRepository.findById(carId);
+            Optional<Car> car = carRepository.findById(carId);
             if (car == null) {
                 throw new ServiceException("Car with Id: " + carId + " does not exist.");
             }
@@ -42,33 +46,34 @@ public class ReservationService {
         }
     }
 
-    public void updateReservation(Integer id, Integer carId, String customerName, LocalDate startDate, LocalDate endDate) throws ServiceException {
-        try {
-            Reservation existingReservation = reservationRepository.findById(id);
-            if (existingReservation == null) {
-                throw new ServiceException("Reservation with Id: " + id + " does not exist.");
-            }
-            Car car = carRepository.findById(carId);
-            if (car == null) {
-                throw new ServiceException("Car with Id: " + carId + " does not exist.");
-            }
-            if (startDate.isAfter(endDate) || startDate.isBefore(LocalDate.now())) {
-                throw new ServiceException("Invalid reservation dates. Start date cannot be after end date.");
-            }
-            validateAvailability(carId, startDate, endDate, id);
-            existingReservation.setCarId(carId);
-            existingReservation.setCustomerName(customerName);
-            existingReservation.setStartDate(startDate);
-            existingReservation.setEndDate(endDate);
+        public void updateReservation(Integer id, Integer carId, String customerName, LocalDate startDate, LocalDate endDate) throws ServiceException {
             try {
-                reservationRepository.modify(existingReservation);
+                Optional<Reservation> existingReservationOptional = reservationRepository.findById(id);
+                if (existingReservationOptional.isEmpty()) {
+                    throw new ServiceException("Reservation with Id: " + id + " does not exist.");
+                }
+                Reservation existingReservation=existingReservationOptional.get();
+                Optional<Car> car = carRepository.findById(carId);
+                if (car.isEmpty()) {
+                    throw new ServiceException("Car with Id: " + carId + " does not exist.");
+                }
+                if (startDate.isAfter(endDate) || startDate.isBefore(LocalDate.now())) {
+                    throw new ServiceException("Invalid reservation dates. Start date cannot be after end date.");
+                }
+                validateAvailability(carId, startDate, endDate, id);
+                existingReservation.setCarId(carId);
+                existingReservation.setCustomerName(customerName);
+                existingReservation.setStartDate(startDate);
+                existingReservation.setEndDate(endDate);
+                try {
+                    reservationRepository.modify(existingReservation);
+                } catch (RepositoryException e) {
+                    throw new ServiceException("Reservation modification failed: " + e.getMessage());
+                }
             } catch (RepositoryException e) {
                 throw new ServiceException("Reservation modification failed: " + e.getMessage());
             }
-        } catch (RepositoryException e) {
-            throw new ServiceException("Reservation modification failed: " + e.getMessage());
         }
-    }
 
     public void deleteReservation(Integer id) throws ServiceException {
         try {
@@ -78,11 +83,11 @@ public class ReservationService {
         }
     }
 
-    public Reservation findById(Integer id) {
+    public Optional<Reservation> findById(Integer id) throws ServiceException {
         try {
             return reservationRepository.findById(id);
         } catch (RepositoryException e) {
-            return null;
+            throw new ServiceException("findById failed"+ e.getMessage());
         }
     }
 

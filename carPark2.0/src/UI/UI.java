@@ -2,6 +2,7 @@ package UI;
 
 import Domain.Car;
 import Domain.Reservation;
+import Exceptions.ServiceException;
 import Filter.AbstractFilter;
 import Filter.CarFilterByBrand;
 import Filter.CarFilterByMaximumPrice;
@@ -15,6 +16,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -28,39 +30,6 @@ public class UI {
         this.carService = carService;
         this.reservationService = reservationService;
     }
-
-//    public static UI createFromSettings() throws Exception {
-//        InputStream is = new FileInputStream("src/settings.properties");
-//        Properties properties = new Properties();
-//        properties.load(is);
-//        String repoType = properties.getProperty("RepositoryType");
-//        IRepository<Integer, Car> carRepo;
-//        IRepository<Integer, Reservation> reservationRepo;
-//        if (repoType.equals("memory")) {
-//            carRepo = new CarRepository();
-//            reservationRepo = new ReservationRepository();
-//        } else if (repoType.equals("text")) {
-//            String carPath = properties.getProperty("CarPath");
-//            String reservationPath = properties.getProperty("ReservationPath");
-//            carRepo = new CarRepositoryTextFile(carPath);
-//            reservationRepo = new ReservationRepositoryTextFile(reservationPath);
-//        } else if (repoType.equals("binary")) {
-//            String carPath = properties.getProperty("CarPath");
-//            String reservationPath = properties.getProperty("ReservationPath");
-//            carRepo = new CarRepositoryBinaryFile(carPath);
-//            reservationRepo = new ReservationRepositoryBinaryFile(reservationPath);
-//        } else if (repoType.equals("database")) {
-//            String carPath = properties.getProperty("CarPath");
-//            String reservationPath = properties.getProperty("ReservationPath");
-//            carRepo = new CarRepositoryDB(carPath);
-//            reservationRepo = new ReservationRepositoryDB(reservationPath);
-//        } else {
-//            throw new Exception("Invalid repository type");
-//        }
-//        CarService carService = new CarService(carRepo, reservationRepo);
-//        ReservationService reservationService = new ReservationService(reservationRepo, carRepo);
-//        return new UI(carService, reservationService);
-//    }
 
     public void run() throws Exception {
         boolean running = true;
@@ -154,8 +123,8 @@ public class UI {
     private void updateCar() throws Exception {
         System.out.print("Enter ID of car to be updated: ");
         Integer id = Integer.parseInt(scanner.nextLine());
-        Car oldCar = carService.findById(id);
-        if (oldCar == null) {
+        Optional<Car> oldCar = carService.findById(id);
+        if (oldCar.isEmpty()) {
             System.out.println("Car with ID " + id + " not found.");
             return;
         }
@@ -182,8 +151,8 @@ public class UI {
     private void viewCarById() {
         System.out.print("Enter ID of car to be viewed: ");
         Integer id = Integer.parseInt(scanner.nextLine());
-        Car car = carService.findById(id);
-        if (car == null) {
+        Optional<Car> car = carService.findById(id);
+        if (car.isEmpty()) {
             System.out.println("Car with ID " + id + " not found.");
         } else {
             System.out.println("Car: " + car);
@@ -281,8 +250,8 @@ public class UI {
     private void updateReservation() throws Exception {
         System.out.print("Enter ID of reservation to be updated: ");
         Integer id = Integer.parseInt(scanner.nextLine());
-        Reservation oldRes = reservationService.findById(id);
-        if (oldRes == null) {
+        Optional<Reservation> oldRes = reservationService.findById(id);
+        if (oldRes.isEmpty()) {
             System.out.println("Reservation with ID " + id + " not found.");
             return;
         }
@@ -291,8 +260,8 @@ public class UI {
         int carId = Integer.parseInt(scanner.nextLine());
         System.out.print("Enter New Customer Name: ");
         String customerName = scanner.nextLine();
-        LocalDate startDate = oldRes.getStartDate();
-        LocalDate endDate = oldRes.getEndDate();
+        LocalDate startDate = oldRes.get().getStartDate();
+        LocalDate endDate = oldRes.get().getEndDate();
         try {
             startDate = readDate("Enter New Start Date: ");
         } catch (Exception e) {
@@ -314,11 +283,11 @@ public class UI {
         System.out.println("Reservation deleted successfully.");
     }
 
-    private void viewReservationById() {
+    private void viewReservationById() throws ServiceException {
         System.out.print("Enter ID of reservation to be viewed: ");
         Integer id = Integer.parseInt(scanner.nextLine());
-        Reservation reservation = reservationService.findById(id);
-        if (reservation == null) {
+        Optional<Reservation> reservation = reservationService.findById(id);
+        if (reservation.isEmpty()) {
             System.out.println("Reservation with ID " + id + " not found.");
         } else {
             System.out.println("Reservation: " + reservation);

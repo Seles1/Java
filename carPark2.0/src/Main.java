@@ -9,12 +9,15 @@ import Service.ReservationService;
 import UI.UI;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDate;
 import java.util.Properties;
 
-public UI createFromClass(UI ui){
-    InputStream is = new FileInputStream("src/settings.properties");
+import Repository.*;
+
+public class Main {
+    public static UI createFromSettings() throws Exception {
+        InputStream is = new FileInputStream("src/settings.properties");
         Properties properties = new Properties();
         properties.load(is);
         String repoType = properties.getProperty("RepositoryType");
@@ -44,12 +47,13 @@ public UI createFromClass(UI ui){
         CarService carService = new CarService(carRepo, reservationRepo);
         ReservationService reservationService = new ReservationService(reservationRepo, carRepo);
         return new UI(carService, reservationService);
-}
+    }
 
-
-public class Main {
-    public static void main(String[] args) throws Exception{
-        UI ui = UI.createFromSettings();
+    public static void main(String[] args) throws Exception {
+        CarService carService = new CarService();
+        ReservationService reservationService = new ReservationService();
+        UI ui;
+        ui=createFromSettings();
         ui.run();
     }
 }

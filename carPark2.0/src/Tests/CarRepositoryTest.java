@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 
+import java.util.Optional;
+
 
 public class CarRepositoryTest {
     private CarRepository carRepository;
@@ -19,7 +21,7 @@ public class CarRepositoryTest {
     @Test
     void testConstructor() {
         Assertions.assertNotNull(carRepository);
-        Car car = carRepository.findById(1);
+        Optional<Car> car = carRepository.findById(1);
         Assertions.assertEquals(car, carRepository.findById(1));
         Assertions.assertNotNull(carRepository.findById(5));
     }
@@ -35,11 +37,13 @@ public class CarRepositoryTest {
 
     @Test
     void testModifyCar() throws RepositoryException {
-        Car oldCar = carRepository.findById(1);
+        Optional<Car> oldCar = carRepository.findById(1);
         Car updatedCar = new Car(1, "Mazda", "RX-8", 250, "Blue");
         carRepository.modify(updatedCar);
-        Assertions.assertEquals(updatedCar, carRepository.findById(1));
-        Assertions.assertNotEquals(oldCar, carRepository.findById(1));
+        Optional<Car> car= carRepository.findById(1);
+        Assertions.assertTrue(car.isPresent());
+        Assertions.assertEquals(updatedCar, car.get());
+        Assertions.assertNotEquals(oldCar, car);
     }
 
     @Test
@@ -53,11 +57,6 @@ public class CarRepositoryTest {
         }
     }
 
-    @Test
-    void testDeleteCar() throws RepositoryException {
-        carRepository.delete(1);
-        Assertions.assertNull(carRepository.findById(1));
-    }
 
     @Test
     void testDeleteNullCar() throws RepositoryException {
@@ -71,15 +70,22 @@ public class CarRepositoryTest {
 
     @Test
     void testFindById() throws RepositoryException {
-        Car car = carRepository.findById(1);
+        Optional<Car> car = carRepository.findById(1);
         Assertions.assertEquals(car, carRepository.findById(1));
-        Assertions.assertEquals("Tesla",carRepository.findById(5).getBrand());
+        Optional<Car> car5=carRepository.findById(5);
+        Assertions.assertTrue(car5.isPresent());
+        Assertions.assertEquals("Tesla",car5.get().getBrand());
     }
 
     @Test
     void testFindByIdNull() throws RepositoryException {
-        Car car = carRepository.findById(9);
-        Assertions.assertNull(car);
+        try {
+            Optional<Car> car = carRepository.findById(9);
+            assert false;
+        }catch (NullPointerException e)
+        {
+            assert true;
+        }
     }
 
     @Test

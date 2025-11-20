@@ -3,8 +3,10 @@ package Repository;
 import Domain.Identifiable;
 import Exceptions.RepositoryException;
 
+import javax.swing.text.html.Option;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class MemoryRepository<ID, T extends Identifiable<ID>> implements IRepository<ID, T> {
     protected Map<ID, T> elements = new HashMap<>();
@@ -22,10 +24,12 @@ public class MemoryRepository<ID, T extends Identifiable<ID>> implements IReposi
     }
 
     @Override
-    public void delete(ID id) throws RepositoryException {
+    public Optional<T> delete(ID id) throws RepositoryException {
+        T object=elements.get(id);
         if (elements.remove(id) == null) {
             throw new RepositoryException("ID does not exist: " + id);
         }
+        return Optional.of(object);
     }
 
     @Override
@@ -40,8 +44,12 @@ public class MemoryRepository<ID, T extends Identifiable<ID>> implements IReposi
         elements.put(id, entity);
     }
 
-    public T findById(ID id) {
-        return elements.get(id);
+    public Optional<T> findById(ID id) throws NullPointerException{
+        try{
+        return Optional.of(elements.get(id));}
+        catch (NullPointerException e){
+            throw new NullPointerException();
+        }
     }
 
     public Iterable<T> getAll() {
