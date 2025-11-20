@@ -9,7 +9,9 @@ import Repository.*;
 
 import javax.swing.text.html.Option;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 public class ReservationService {
     private final IRepository<Integer, Reservation> reservationRepository;
@@ -46,34 +48,34 @@ public class ReservationService {
         }
     }
 
-        public void updateReservation(Integer id, Integer carId, String customerName, LocalDate startDate, LocalDate endDate) throws ServiceException {
+    public void updateReservation(Integer id, Integer carId, String customerName, LocalDate startDate, LocalDate endDate) throws ServiceException {
+        try {
+            Optional<Reservation> existingReservationOptional = reservationRepository.findById(id);
+            if (existingReservationOptional.isEmpty()) {
+                throw new ServiceException("Reservation with Id: " + id + " does not exist.");
+            }
+            Reservation existingReservation = existingReservationOptional.get();
+            Optional<Car> car = carRepository.findById(carId);
+            if (car.isEmpty()) {
+                throw new ServiceException("Car with Id: " + carId + " does not exist.");
+            }
+            if (startDate.isAfter(endDate) || startDate.isBefore(LocalDate.now())) {
+                throw new ServiceException("Invalid reservation dates. Start date cannot be after end date.");
+            }
+            validateAvailability(carId, startDate, endDate, id);
+            existingReservation.setCarId(carId);
+            existingReservation.setCustomerName(customerName);
+            existingReservation.setStartDate(startDate);
+            existingReservation.setEndDate(endDate);
             try {
-                Optional<Reservation> existingReservationOptional = reservationRepository.findById(id);
-                if (existingReservationOptional.isEmpty()) {
-                    throw new ServiceException("Reservation with Id: " + id + " does not exist.");
-                }
-                Reservation existingReservation=existingReservationOptional.get();
-                Optional<Car> car = carRepository.findById(carId);
-                if (car.isEmpty()) {
-                    throw new ServiceException("Car with Id: " + carId + " does not exist.");
-                }
-                if (startDate.isAfter(endDate) || startDate.isBefore(LocalDate.now())) {
-                    throw new ServiceException("Invalid reservation dates. Start date cannot be after end date.");
-                }
-                validateAvailability(carId, startDate, endDate, id);
-                existingReservation.setCarId(carId);
-                existingReservation.setCustomerName(customerName);
-                existingReservation.setStartDate(startDate);
-                existingReservation.setEndDate(endDate);
-                try {
-                    reservationRepository.modify(existingReservation);
-                } catch (RepositoryException e) {
-                    throw new ServiceException("Reservation modification failed: " + e.getMessage());
-                }
+                reservationRepository.modify(existingReservation);
             } catch (RepositoryException e) {
                 throw new ServiceException("Reservation modification failed: " + e.getMessage());
             }
+        } catch (RepositoryException e) {
+            throw new ServiceException("Reservation modification failed: " + e.getMessage());
         }
+    }
 
     public void deleteReservation(Integer id) throws ServiceException {
         try {
@@ -87,7 +89,7 @@ public class ReservationService {
         try {
             return reservationRepository.findById(id);
         } catch (RepositoryException e) {
-            throw new ServiceException("findById failed"+ e.getMessage());
+            throw new ServiceException("findById failed" + e.getMessage());
         }
     }
 
@@ -100,17 +102,19 @@ public class ReservationService {
         return filteredRepository.getAll();
     }
 
-    private void validateAvailability(Integer carId, LocalDate startDate, LocalDate endDate, Integer id) throws
-            ServiceException {
-        for (Reservation reservation : reservationRepository.getAll()) {
-            if (reservation.getId().equals(id)) {
-                continue;
-            }
-            if (reservation.getCarId().equals(carId)) {
-                if (!(reservation.getEndDate().isBefore(startDate) || endDate.isBefore(reservation.getStartDate()))) {
-                    throw new ServiceException("Car is already reserved during this period.");
+    private void validateAvailability(Integer carId, LocalDate startDate, LocalDate endDate, Integer id) throws ServiceException {
+        {
+            for (Reservation reservation : reservationRepository.getAll()) {
+                if (reservation.getId().equals(id)) {
+                    continue;
+                }
+                if (reservation.getCarId().equals(carId)) {
+                    if (!(reservation.getEndDate().isBefore(startDate) || endDate.isBefore(reservation.getStartDate()))) {
+                        throw new ServiceException("Car is already reserved during this period.");
+                    }
                 }
             }
+
         }
     }
 }

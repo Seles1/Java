@@ -328,8 +328,6 @@ public class UI {
             return;
         }
         System.out.println("Results:");
-        for (T item : items) {
-            System.out.println(item);
-        }
+        items.forEach(System.out::println);
     }
 }
