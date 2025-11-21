@@ -8,8 +8,11 @@ import Filter.AbstractFilter;
 import Repository.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Filter;
+import java.util.stream.*;
 
 public class CarService {
     private final IRepository<Integer, Car> carRepository;
@@ -84,6 +87,38 @@ public class CarService {
             throw new ServiceException("Failed to delete car: " + e.getMessage());
         }
     }
+    public List<Optional<Car>> getCarsRentedByCustomer(String customerName){
+        List<Reservation> reservations=new ArrayList<Reservation>();
+        reservationRepository.getAll().forEach(reservations::add);
+        return reservations.stream()
+                .filter(reservation -> reservation.getCustomerName().equals(customerName))
+                .map(reservation->{
+                    try {
+                        return carRepository.findById(reservation.getCarId());
+                    } catch (RepositoryException e) {
+                        return Optional.<Car>empty();
+                    }
+                }).
+                filter(Optional::isPresent)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+    public List<Car> getCarsOfAGivenColor(String color){
+        List<Car> cars=new ArrayList<Car>();
+        carRepository.getAll().forEach(cars::add);
+        return cars.stream()
+                .filter(car->car.getColor().equals(color))
+                .collect(Collectors.toList());
+    }
+
+    public List<Car> getCarsSortedDescendingByPrice(){
+        List<Car> cars=new ArrayList<Car>();
+        carRepository.getAll().forEach(cars::add);
+        return cars.stream()
+                .sorted(Comparator.comparing(Car::getPrice).reversed())
+                .collect(Collectors.toList());
+    }
+
 
     public Iterable<Car> getFilteredCars(AbstractFilter<Car> filter) {
         FilteredRepository<Integer, Car> filteredRepository = new FilteredRepository<>(carRepository, filter);

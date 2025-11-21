@@ -38,6 +38,7 @@ public class UI {
             System.out.println("2. Reservation Operations");
             System.out.println("3. Filter Cars");
             System.out.println("4. Filter Reservations");
+            System.out.println("5. Reports Menu");
             System.out.println("0. Exit");
             System.out.print("Enter your choice: ");
             String choice = scanner.nextLine();
@@ -54,6 +55,9 @@ public class UI {
                         break;
                     case "4":
                         filterReservations();
+                        break;
+                    case "5":
+                        reportsMenu();
                         break;
                     case "0":
                         running = false;
@@ -171,12 +175,12 @@ public class UI {
                 case "1":
                     System.out.print("Enter Car Brand to search for: ");
                     String brand = scanner.nextLine();
-                    viewAll(carService.getFilteredCars(car->car.getBrand().equals(brand)));
+                    viewAll(carService.getFilteredCars(car -> car.getBrand().equals(brand)));
                     break;
                 case "2":
                     System.out.print("Enter Maximum Price: ");
                     int maxPrice = Integer.parseInt(scanner.nextLine());
-                    viewAll(carService.getFilteredCars(car->car.getPrice()<=maxPrice));
+                    viewAll(carService.getFilteredCars(car -> car.getPrice() <= maxPrice));
                     break;
                 case "0":
                     break;
@@ -303,13 +307,13 @@ public class UI {
         try {
             switch (choice) {
                 case "1":
-                    System.out.print("Enter part of Customer Name: ");
+                    System.out.print("Enter Customer Name: ");
                     String name = scanner.nextLine();
-                    viewAll(reservationService.getFilteredReservations(reservation->reservation.getCustomerName().equals(name)));
+                    viewAll(reservationService.getFilteredReservations(reservation -> reservation.getCustomerName().equals(name)));
                     break;
                 case "2":
                     LocalDate startDate = readDate("Enter Minimum Start Date");
-                    viewAll(reservationService.getFilteredReservations(reservation->!reservation.getStartDate().isBefore(startDate)));
+                    viewAll(reservationService.getFilteredReservations(reservation -> !reservation.getStartDate().isBefore(startDate)));
                     break;
                 case "0":
                     break;
@@ -329,5 +333,52 @@ public class UI {
         }
         System.out.println("Results:");
         items.forEach(System.out::println);
+    }
+
+    private void reportsMenu() {
+        boolean running = true;
+        while (running) {
+            System.out.println("1. Get all cars rented by a chosen customer");
+            System.out.println("2. Get customers that rented a car");
+            System.out.println("3. Get cars from most to least expensive");
+            System.out.println("4. Get cars of a givencolor");
+            System.out.println("5. Get reservations that are active at a certain date");
+            System.out.println("0. Exit");
+            System.out.print("Enter your choice: ");
+            String choice = scanner.nextLine();
+            try {
+                switch (choice) {
+                    case "1":
+                        System.out.print("Enter Customer Name: ");
+                        String name = scanner.nextLine();
+                        System.out.println(carService.getCarsRentedByCustomer(name));
+                        break;
+                    case "2":
+                        System.out.print("Enter carId: ");
+                        Integer carId = Integer.parseInt(scanner.nextLine());
+                        System.out.println(reservationService.getCustomerNameByCarId(carId));
+                        break;
+                    case "3":
+                        System.out.println(carService.getCarsSortedDescendingByPrice());
+                        break;
+                    case "4":
+                        System.out.print("Enter color: ");
+                        String color=scanner.nextLine();
+                        System.out.println(carService.getCarsOfAGivenColor(color));
+                        break;
+                    case "5":
+                        LocalDate date=readDate("Enter a date: ");
+                        System.out.println(reservationService.getActiveReservationsAtAGivenDate(date));
+                        break;
+                    case "0":
+                        running = false;
+                        break;
+                    default:
+                        System.out.println("Invalid choice.");
+                }
+            } catch (Exception e) {
+                System.out.println("Invalid info");
+            }
+        }
     }
 }

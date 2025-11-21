@@ -37,19 +37,24 @@ public class ReservationRepositoryTextFile extends FileRepository<Integer, Reser
                 }
                 nextAvailableId++;
             } catch (Exception e) {
-                throw new RepositoryException("Error reading from file"+e.getMessage());
+                throw new RepositoryException("Error reading from file" + e.getMessage());
             }
         }
     }
 
     public void writeToFile() throws RepositoryException {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
-            for (Reservation r : elements.values()) {
-                bufferedWriter.write(r.toString());
-                bufferedWriter.newLine();
-            }
+            elements.values().forEach(r -> {
+                try {
+                    bufferedWriter.write(r.toString());
+                    bufferedWriter.newLine();
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
+                ;
+            });
         } catch (Exception e) {
-            throw new RepositoryException("Error writing to file: "+e.getMessage());
+            throw new RepositoryException("Error writing to file: " + e.getMessage());
         }
     }
 

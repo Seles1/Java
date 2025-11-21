@@ -16,7 +16,7 @@ public class CarRepositoryTextFile extends FileRepository<Integer, Car> {
     public void readFromFile() throws RepositoryException {
         nextAvailableId = 1;
         File file = new File(fileName);
-        if (file.length()!=0 && file.exists()) {
+        if (file.length() != 0 && file.exists()) {
             try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
                 String line = bufferedReader.readLine();
                 while (line != null) {
@@ -36,19 +36,23 @@ public class CarRepositoryTextFile extends FileRepository<Integer, Car> {
                 }
                 nextAvailableId++;
             } catch (Exception e) {
-                throw new RepositoryException("Error reading from file: "+e.getMessage());
+                throw new RepositoryException("Error reading from file: " + e.getMessage());
             }
         }
     }
 
     public void writeToFile() throws RepositoryException {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
-            for (Car c : elements.values()) {
-                bufferedWriter.write(c.toString());
-                bufferedWriter.newLine();
-            }
+            elements.values().forEach(c -> {
+                try {
+                    bufferedWriter.write(c.toString());
+                    bufferedWriter.newLine();
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                };
+            });
         } catch (Exception e) {
-            throw new RepositoryException("Error writing to file: "+e.getMessage());
+            throw new RepositoryException("Error writing to file: " + e.getMessage());
         }
     }
 
