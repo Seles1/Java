@@ -45,11 +45,9 @@ public class MemoryRepository<ID, T extends Identifiable<ID>> implements IReposi
     }
 
     public Optional<T> findById(ID id) throws NullPointerException{
-        try{
-        return Optional.of(elements.get(id));}
-        catch (NullPointerException e){
-            throw new NullPointerException();
-        }
+        if(elements==null)
+            return Optional.empty();
+        else {return Optional.of(elements.get(id));}
     }
 
     public Iterable<T> getAll() {

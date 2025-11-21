@@ -7,13 +7,11 @@ import Exceptions.ServiceException;
 import Filter.AbstractFilter;
 import Repository.*;
 
-import javax.swing.text.html.Option;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 public class ReservationService {
     private final IRepository<Integer, Reservation> reservationRepository;
@@ -104,8 +102,8 @@ public class ReservationService {
         return filteredRepository.getAll();
     }
 
-    public List<String> getCustomerNameByCarId(Integer carId){
-        List<Reservation> reservations=new ArrayList<Reservation>();
+    public List<String> getCustomerNameByCarId(Integer carId) {
+        List<Reservation> reservations = new ArrayList<Reservation>();
         reservationRepository.getAll().forEach(reservations::add);
         return reservations.stream()
                 .filter(reservation -> reservation.getCarId().equals(carId))
@@ -114,11 +112,11 @@ public class ReservationService {
                 .collect(Collectors.toList());
     }
 
-    public List<Reservation> getActiveReservationsAtAGivenDate(LocalDate date){
-        List<Reservation> reservations=new ArrayList<Reservation>();
+    public List<Reservation> getActiveReservationsAtAGivenDate(LocalDate date) {
+        List<Reservation> reservations = new ArrayList<Reservation>();
         reservationRepository.getAll().forEach(reservations::add);
         return reservations.stream()
-                .filter(reservation -> reservation.getStartDate().isBefore(date)&&reservation.getEndDate().isAfter(date))
+                .filter(reservation -> reservation.getStartDate().isBefore(date) && reservation.getEndDate().isAfter(date))
                 .collect(Collectors.toList());
     }
 
@@ -134,7 +132,6 @@ public class ReservationService {
                     }
                 }
             }
-
         }
     }
 }

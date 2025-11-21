@@ -68,20 +68,19 @@ public class CarService {
     }
 
     public void deleteCar(Integer id) throws ServiceException {
-        boolean hasReservation = false;
-        for (Reservation res : reservationRepository.getAll()) {
-            if (res.getCarId().equals(id)) {
-                hasReservation = true;
-                break;
+        reservationRepository.getAll().forEach(reservation -> {
+            if (reservation.getCarId().equals(id)) {
+                try {
+                    reservationRepository.delete(reservation.getId());
+                } catch (RepositoryException e) {
+                    throw new RuntimeException("Reservation deletion failed" + e.getMessage());
+                }
             }
-        }
-        if (hasReservation) {
-            throw new ServiceException("Cannot delete car " + id + ". It has existing reservations.");
-        }
+        });
         try {
-            carRepository.delete(id);
+            reservationRepository.delete(id);
         } catch (RepositoryException e) {
-            throw new ServiceException("Failed to delete car: " + e.getMessage());
+            throw new ServiceException("Car deletion failed" + e.getMessage());
         }
     }
 
