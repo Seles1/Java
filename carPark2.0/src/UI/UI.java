@@ -264,8 +264,8 @@ public class UI {
         int carId = Integer.parseInt(scanner.nextLine());
         System.out.print("Enter New Customer Name: ");
         String customerName = scanner.nextLine();
-        LocalDate startDate = oldRes.get().getStartDate();
-        LocalDate endDate = oldRes.get().getEndDate();
+        LocalDate startDate;
+        LocalDate endDate;
         try {
             startDate = readDate("Enter New Start Date: ");
         } catch (Exception e) {

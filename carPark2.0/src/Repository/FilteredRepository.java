@@ -18,11 +18,11 @@ public class FilteredRepository<ID, T extends Identifiable<ID>> {
 
     public Iterable<T> getAll() {
             List<T> filteredList = new ArrayList<>();
-            for (T entity : repository.getAll()) {
-                if (filter.accept(entity)) {
+            repository.getAll().forEach(entity->{
+                if(filter.accept(entity)){
                     filteredList.add(entity);
                 }
-            }
+            });
             return filteredList;
     }
 }
