@@ -166,7 +166,7 @@ public class UI {
     private void filterCars() {
         System.out.println("1. Filter by Brand");
         System.out.println("2. Filter by Maximum Price");
-        System.out.println("0. Back to Main Menu");
+        System.out.println("0. Back to Main.Main Menu");
         System.out.print("Enter your choice: ");
         String choice = scanner.nextLine();
 
@@ -200,7 +200,7 @@ public class UI {
             System.out.println("3. Delete Reservation");
             System.out.println("4. View Reservation by ID");
             System.out.println("5. View All Reservations");
-            System.out.println("0. Back to Main Menu");
+            System.out.println("0. Back to Main.Main Menu");
             System.out.print("Enter your choice: ");
             String choice = scanner.nextLine();
             try {
@@ -301,7 +301,7 @@ public class UI {
     private void filterReservations() {
         System.out.println("1. Filter by Customer Name");
         System.out.println("2. Filter by Start Date");
-        System.out.println("0. Back to Main Menu");
+        System.out.println("0. Back to Main.Main Menu");
         System.out.print("Enter your choice: ");
         String choice = scanner.nextLine();
         try {

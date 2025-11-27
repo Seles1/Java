@@ -1,3 +1,4 @@
+package Main;
 
 import Domain.Car;
 import Domain.Reservation;
@@ -9,7 +10,6 @@ import Service.ReservationService;
 import UI.UI;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
@@ -50,8 +50,6 @@ public class Main {
     }
 
     public static void main(String[] args) throws Exception {
-        CarService carService = new CarService();
-        ReservationService reservationService = new ReservationService();
         UI ui;
         ui=createFromSettings();
         ui.run();

@@ -56,10 +56,11 @@ public class CarRepositoryDB implements IRepository<Integer, Car> {
 
     @Override
     public Optional<Car> delete(Integer id) throws RepositoryException {
+        System.out.println("D");
         openConnection();
-        Car car=null;
+        Car car = null;
         try {
-            PreparedStatement rt=conn.prepareStatement("SELECT * FROM Cars WHERE Cars.id=?");
+            PreparedStatement rt = conn.prepareStatement("SELECT * FROM Cars WHERE Cars.id=?");
             rt.setInt(1, id);
             ResultSet rs = rt.executeQuery();
             if (rs.next()) {
@@ -72,16 +73,19 @@ public class CarRepositoryDB implements IRepository<Integer, Car> {
                 );
             }
             rt.close();
-            PreparedStatement st = conn.prepareStatement("DELETE FROM Cars WHERE Cars.id=?");
-            st.setInt(1, id);
-            st.executeUpdate();
-            st.close();
+            if (car != null) {
+                PreparedStatement st = conn.prepareStatement("DELETE FROM Cars WHERE Cars.id=?");
+                st.setInt(1, id);
+                st.executeUpdate();
+                st.close();
+            }
         } catch (SQLException e) {
             throw new RepositoryException(e.getMessage());
         } finally {
             closeConnection();
-            return Optional.of(car);
         }
+
+        return Optional.ofNullable(car);
     }
 
     @Override
@@ -117,7 +121,7 @@ public class CarRepositoryDB implements IRepository<Integer, Car> {
                 int price = rs.getInt("price");
                 String color = rs.getString("color");
                 st.close();
-                Car car=new Car(Id, brand, model, price, color);
+                Car car = new Car(Id, brand, model, price, color);
                 return Optional.of(car);
             } else {
                 st.close();

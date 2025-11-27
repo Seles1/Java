@@ -8,7 +8,6 @@ import Filter.AbstractFilter;
 import Repository.*;
 
 import java.util.*;
-import java.util.logging.Filter;
 import java.util.stream.*;
 
 public class CarService {
@@ -68,6 +67,7 @@ public class CarService {
     }
 
     public void deleteCar(Integer id) throws ServiceException {
+
         reservationRepository.getAll().forEach(reservation -> {
             if (reservation.getCarId().equals(id)) {
                 try {
@@ -78,7 +78,7 @@ public class CarService {
             }
         });
         try {
-            reservationRepository.delete(id);
+            carRepository.delete(id);
         } catch (RepositoryException e) {
             throw new ServiceException("Car deletion failed" + e.getMessage());
         }
