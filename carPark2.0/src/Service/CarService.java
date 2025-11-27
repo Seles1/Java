@@ -57,6 +57,12 @@ public class CarService {
     public Iterable<Car> getAll() {
         return carRepository.getAll();
     }
+    public List<Car> getAllCars(){
+        Iterable<Car> cars=carRepository.getAll();
+        List <Car> carList= new ArrayList<>();
+        cars.forEach(carList::add);
+        return carList;
+    }
 
     public Optional<Car> findById(Integer id) {
         try {
@@ -67,7 +73,6 @@ public class CarService {
     }
 
     public void deleteCar(Integer id) throws ServiceException {
-
         reservationRepository.getAll().forEach(reservation -> {
             if (reservation.getCarId().equals(id)) {
                 try {

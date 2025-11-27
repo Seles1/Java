@@ -56,7 +56,6 @@ public class CarRepositoryDB implements IRepository<Integer, Car> {
 
     @Override
     public Optional<Car> delete(Integer id) throws RepositoryException {
-        System.out.println("D");
         openConnection();
         Car car = null;
         try {
