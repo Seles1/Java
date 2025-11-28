@@ -2,7 +2,6 @@ package Gui;
 
 import Domain.Car;
 import Domain.Reservation;
-import Exceptions.RepositoryException;
 import Main.Initialiser;
 import Repository.CarRepository;
 import Repository.IRepository;
@@ -16,10 +15,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.w3c.dom.Text;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 
 public class GUI extends Application {
@@ -89,7 +84,14 @@ public class GUI extends Application {
         addButton.setOnMouseClicked(e -> {
             String brand = brandTextField.getText();
             String model = modelTextField.getText();
-            int price = Integer.parseInt(priceTextField.getText());
+            int price;
+            try {
+                price = Integer.parseInt(priceTextField.getText());
+            } catch (NumberFormatException e1) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Price must be an integer");
+                alert.showAndWait();
+                return;
+            }
             String color = colorTextField.getText();
             try {
                 carService.addCar(brand, model, price, color);
@@ -97,7 +99,7 @@ public class GUI extends Application {
                 carsListView.setItems(carsObservableList);
                 clearTextFields();
             } catch (Exception e1) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, e1.getMessage());
+                Alert alert = new Alert(Alert.AlertType.ERROR, "One of the fields is wrong");
                 alert.showAndWait();
             }
         });
@@ -105,14 +107,14 @@ public class GUI extends Application {
 
     private void deleteButtonHandler() {
         deleteButton.setOnMouseClicked(e -> {
-            Integer id = carsListView.getSelectionModel().selectedItemProperty().get().getId();
             try {
+                Integer id = carsListView.getSelectionModel().selectedItemProperty().get().getId();
                 carService.deleteCar(id);
                 carsObservableList = FXCollections.observableArrayList(carService.getAllCars());
                 carsListView.setItems(carsObservableList);
                 clearTextFields();
             } catch (Exception e1) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, e1.getMessage());
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Please select a car from the list");
                 alert.showAndWait();
             }
         });
@@ -120,10 +122,24 @@ public class GUI extends Application {
 
     private void updateButtonHandler() {
         updateButton.setOnMouseClicked(e -> {
-            Integer id = carsListView.getSelectionModel().selectedItemProperty().get().getId();
+            Integer id;
+            int price;
+            try {
+                id = carsListView.getSelectionModel().selectedItemProperty().get().getId();
+            } catch (Exception e1) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Please select a car from the list");
+                alert.showAndWait();
+                return;
+            }
             String brand = brandTextField.getText();
             String model = modelTextField.getText();
-            int price = Integer.parseInt(priceTextField.getText());
+            try {
+                price = Integer.parseInt(priceTextField.getText());
+            } catch (NumberFormatException e1) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Price must be an integer");
+                alert.showAndWait();
+                return;
+            }
             String color = colorTextField.getText();
             try {
                 carService.updateCar(id, brand, model, price, color);
