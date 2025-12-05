@@ -59,7 +59,7 @@
                         </TableView>
                         <Button id="reservationAddButton" fx:id="reservationAddButton" layoutX="14.0" layoutY="400.0" mnemonicParsing="false" onAction="#reservationAddButtonHandler" prefHeight="34.0" prefWidth="70.0" text="add" />
                         <Button id="reservationModifyButton" fx:id="reservationModifyButton" layoutX="84.0" layoutY="400.0" mnemonicParsing="false" onAction="#reservationModifyButtonHandler" prefHeight="34.0" prefWidth="70.0" text="modify" />
-                        <Button id="reservationDeleteButton" fx:id="reservationDeleteButton" layoutX="154.0" layoutY="400.0" mnemonicParsing="false" onAction="#carDeleteButtonHandler" prefHeight="34.0" prefWidth="70.0" text="delete" />
+                        <Button id="reservationDeleteButton" fx:id="reservationDeleteButton" layoutX="154.0" layoutY="400.0" mnemonicParsing="false" onAction="#reservationDeleteButtonHandler" prefHeight="34.0" prefWidth="70.0" text="delete" />
                         <ChoiceBox id="reservationFilterChoiceBox" fx:id="reservationFilterChoiceBox" layoutX="73.0" layoutY="14.0" prefWidth="150.0" />
                         <Text layoutX="14.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Filter:" wrappingWidth="48.30622673034668">
                            <font>
@@ -69,6 +69,7 @@
                         <TextField id="reservationTextField" fx:id="reservationTextField" layoutX="224.0" layoutY="14.0" prefHeight="27.0" prefWidth="291.0" />
                         <Button id="reservationApplyButton" fx:id="reservationApplyButton" layoutX="515.0" layoutY="14.0" mnemonicParsing="false" onAction="#reservationApplyButtonHandler" prefHeight="27.0" prefWidth="44.0" text="✓" />
                         <Button id="carDeleteButton" fx:id="reservationExitButton" layoutX="476.0" layoutY="400.0" mnemonicParsing="false" onAction="#reservationExitButtonHandler" prefHeight="34.0" prefWidth="70.0" style="-fx-background-color: #AA0000;" text="exit" textFill="WHITE" />
+                        <Button fx:id="deleteAllButton" layoutX="290.0" layoutY="391.0" mnemonicParsing="false" onAction="#deleteAllHandler" text="deleteAll" />
                      </children></AnchorPane>
             </content>
           </Tab>

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import Domain.Car;
 import Domain.Reservation;
@@ -60,6 +61,8 @@ public class CarsGUIController {
     private Button reservationModifyButton;
     @FXML
     private Button reservationDeleteButton;
+    @FXML
+    private Button deleteAllButton;
 
     @FXML
     private ChoiceBox<String> carFilterChoiceBox;
@@ -113,6 +116,21 @@ public class CarsGUIController {
         populateTable();
     }
 
+    @FXML
+    void deleteAllHandler(){
+        List<Reservation> reservationList=reservationService.getAllReservations();
+        try {
+            reservationList.forEach(reservation -> {
+                try {
+                    reservationService.deleteReservation(reservation.getId());
+                } catch (ServiceException e) {
+                }
+            });
+        }catch (Exception e){
+        }
+        populateTable();
+    }
+
     void populateTable() {
         this.carTableView.getItems().setAll(this.carService.getAllCars());
         this.reservationTableView.getItems().setAll(this.reservationService.getAllReservations());
@@ -152,11 +170,11 @@ public class CarsGUIController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("CarsAditionalWindows.fxml"));
             CarsAditionalController controller = new CarsAditionalController(carToModify);
             loader.setController(controller);
-            Parent root = loader.load();
+            Parent parent = loader.load();
             Stage dialogStage = new Stage();
             dialogStage.setTitle(title);
             dialogStage.initOwner(carFilterChoiceBox.getScene().getWindow());
-            dialogStage.setScene(new Scene(root));
+            dialogStage.setScene(new Scene(parent));
             dialogStage.showAndWait();
 
             Car result = controller.getResultCar();
@@ -179,11 +197,11 @@ public class CarsGUIController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("ReservationAditionalWindow.fxml"));
             ReservationAditionalController controller = new ReservationAditionalController(reservationToModify);
             loader.setController(controller);
-            Parent root = loader.load();
+            Parent parent = loader.load();
             Stage dialogStage = new Stage();
             dialogStage.setTitle(title);
             dialogStage.initOwner(reservationFilterChoiceBox.getScene().getWindow());
-            dialogStage.setScene(new Scene(root));
+            dialogStage.setScene(new Scene(parent));
             dialogStage.showAndWait();
 
             Reservation result = controller.getResultReservation();
@@ -270,7 +288,6 @@ public class CarsGUIController {
                 showAlert("Error", "Filter failed: " + e.getMessage());
             }
         }
-
     }
 
     @FXML
@@ -304,7 +321,6 @@ public class CarsGUIController {
                         List<String> text=new ArrayList<>();
                         text=reservationService.getCustomerNameByCarId(Integer.parseInt(filterText));
                         showAlert("Report",text.toString());
-
                         break;
                     case null:
                         break;
