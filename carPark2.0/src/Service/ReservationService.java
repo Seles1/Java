@@ -59,7 +59,7 @@ public class ReservationService {
             if (car.isEmpty()) {
                 throw new ServiceException("Car with Id: " + carId + " does not exist.");
             }
-            if (startDate.isAfter(endDate) || startDate.isBefore(LocalDate.now())) {
+            if (startDate.isAfter(endDate)) {
                 throw new ServiceException("Invalid reservation dates. Start date cannot be after end date.");
             }
             validateAvailability(carId, startDate, endDate, id);
@@ -95,6 +95,12 @@ public class ReservationService {
 
     public Iterable<Reservation> getAll() {
         return reservationRepository.getAll();
+    }
+    public List<Reservation> getAllReservations() {
+        Iterable<Reservation> reservations = reservationRepository.getAll();
+        List<Reservation> reservationList = new ArrayList<>();
+        reservations.forEach(reservationList::add);
+        return reservationList;
     }
 
     public Iterable<Reservation> getFilteredReservations(AbstractFilter<Reservation> filter) {

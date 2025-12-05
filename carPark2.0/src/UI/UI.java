@@ -341,7 +341,7 @@ public class UI {
             System.out.println("1. Get all cars rented by a chosen customer");
             System.out.println("2. Get customers that rented a car");
             System.out.println("3. Get cars from most to least expensive");
-            System.out.println("4. Get cars of a givencolor");
+            System.out.println("4. Get cars of a given color");
             System.out.println("5. Get reservations that are active at a certain date");
             System.out.println("0. Exit");
             System.out.print("Enter your choice: ");

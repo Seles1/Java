@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="447.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TabPane layoutX="18.0" layoutY="14.0" prefHeight="480.0" prefWidth="563.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Cars">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="402.0" prefWidth="563.0">
+                     <children>
+                        <TableView id="carTableView" fx:id="carTableView" layoutX="-1.0" layoutY="42.0" prefHeight="349.0" prefWidth="563.0">
+                          <columns>
+                            <TableColumn id="carIdColumn" fx:id="carIdColumn" prefWidth="62.40008544921875" text="id" />
+                            <TableColumn id="carBrandColumn" fx:id="carBrandColumn" prefWidth="127.99993896484375" text="brand" />
+                              <TableColumn id="carModelColumn" fx:id="carModelColumn" prefWidth="148.0" text="model" />
+                              <TableColumn id="carPriceColumn" fx:id="carPriceColumn" prefWidth="124.0" text="price" />
+                              <TableColumn id="carColumnTable" fx:id="carColorColumn" prefWidth="99.199951171875" text="color" />
+                          </columns>
+                        </TableView>
+                        <Button id="carAddButton" fx:id="carAddButton" layoutX="14.0" layoutY="400.0" mnemonicParsing="false" onAction="#carAddButtonHandler" prefHeight="34.0" prefWidth="70.0" text="add" />
+                        <Button id="carModifyButton" fx:id="carModifyButton" layoutX="84.0" layoutY="400.0" mnemonicParsing="false" onAction="#carModifyButtonHandler" prefHeight="34.0" prefWidth="70.0" text="modify" />
+                        <Button id="carDeleteButton" fx:id="carDeleteButton" layoutX="154.0" layoutY="400.0" mnemonicParsing="false" onAction="#carDeleteButtonHandler" prefHeight="34.0" prefWidth="70.0" text="delete" />
+                        <ChoiceBox id="carFilterChoiceBox" fx:id="carFilterChoiceBox" layoutX="73.0" layoutY="14.0" prefWidth="150.0" />
+                        <Text layoutX="14.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Filter:" wrappingWidth="48.30622673034668">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Text>
+                        <TextField id="carTextField" fx:id="carTextField" layoutX="225.0" layoutY="14.0" prefHeight="27.0" prefWidth="291.0" />
+                        <Button id="carApplyButton" fx:id="carApplyButton" layoutX="516.0" layoutY="14.0" mnemonicParsing="false" onAction="#CarApplyButtonHandler" prefHeight="27.0" prefWidth="44.0" text="✓" />
+                        <Button id="carDeleteButton" fx:id="carExitButton" layoutX="467.0" layoutY="400.0" mnemonicParsing="false" onAction="#carExitButtonHandler" prefHeight="34.0" prefWidth="70.0" style="-fx-background-color: #AA0000;" text="exit" textFill="WHITE" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Reservations">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="374.0" prefWidth="563.0">
+                     <children>
+                        <TableView id="reservationTableView" fx:id="reservationTableView" layoutY="43.0" prefHeight="348.0" prefWidth="563.0">
+                           <columns>
+                              <TableColumn id="reservationIdColumn" fx:id="reservationIdColumn" prefWidth="52.0" text="id" />
+                              <TableColumn id="reservationCarIdColumn" fx:id="reservationCarIdColumn" prefWidth="59.20001220703125" text="car id" />
+                              <TableColumn id="reservationCustomerNameColumn" fx:id="reservationCustomerNameColumn" prefWidth="176.79998779296875" text="customer name" />
+                              <TableColumn id="reservationStartDateColumn" fx:id="reservationStartDateColumn" prefWidth="148.79998779296875" text="start date" />
+                              <TableColumn id="reservationEndDateColumn" fx:id="reservationEndDateColumn" prefWidth="131.2000732421875" text="end date" />
+                           </columns>
+                        </TableView>
+                        <Button id="reservationAddButton" fx:id="reservationAddButton" layoutX="14.0" layoutY="400.0" mnemonicParsing="false" onAction="#reservationAddButtonHandler" prefHeight="34.0" prefWidth="70.0" text="add" />
+                        <Button id="reservationModifyButton" fx:id="reservationModifyButton" layoutX="84.0" layoutY="400.0" mnemonicParsing="false" onAction="#reservationModifyButtonHandler" prefHeight="34.0" prefWidth="70.0" text="modify" />
+                        <Button id="reservationDeleteButton" fx:id="reservationDeleteButton" layoutX="154.0" layoutY="400.0" mnemonicParsing="false" onAction="#carDeleteButtonHandler" prefHeight="34.0" prefWidth="70.0" text="delete" />
+                        <ChoiceBox id="reservationFilterChoiceBox" fx:id="reservationFilterChoiceBox" layoutX="73.0" layoutY="14.0" prefWidth="150.0" />
+                        <Text layoutX="14.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Filter:" wrappingWidth="48.30622673034668">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Text>
+                        <TextField id="reservationTextField" fx:id="reservationTextField" layoutX="224.0" layoutY="14.0" prefHeight="27.0" prefWidth="291.0" />
+                        <Button id="reservationApplyButton" fx:id="reservationApplyButton" layoutX="515.0" layoutY="14.0" mnemonicParsing="false" onAction="#reservationApplyButtonHandler" prefHeight="27.0" prefWidth="44.0" text="✓" />
+                        <Button id="carDeleteButton" fx:id="reservationExitButton" layoutX="476.0" layoutY="400.0" mnemonicParsing="false" onAction="#reservationExitButtonHandler" prefHeight="34.0" prefWidth="70.0" style="-fx-background-color: #AA0000;" text="exit" textFill="WHITE" />
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>

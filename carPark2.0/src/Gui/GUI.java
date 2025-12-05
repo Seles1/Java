@@ -15,6 +15,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.w3c.dom.Text;
 
 
 public class GUI extends Application {
@@ -32,6 +33,7 @@ public class GUI extends Application {
 
     public void start(Stage stage) throws Exception {
         HBox mainLayout = new HBox();
+
 
         carsListView = new ListView<>();
         carsObservableList = FXCollections.observableArrayList(carService.getAllCars());

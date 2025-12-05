@@ -57,9 +57,10 @@ public class CarService {
     public Iterable<Car> getAll() {
         return carRepository.getAll();
     }
-    public List<Car> getAllCars(){
-        Iterable<Car> cars=carRepository.getAll();
-        List <Car> carList= new ArrayList<>();
+
+    public List<Car> getAllCars() {
+        Iterable<Car> cars = carRepository.getAll();
+        List<Car> carList = new ArrayList<>();
         cars.forEach(carList::add);
         return carList;
     }
